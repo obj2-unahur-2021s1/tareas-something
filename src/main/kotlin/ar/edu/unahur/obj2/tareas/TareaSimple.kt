@@ -1,26 +1,30 @@
 package ar.edu.unahur.obj2.tareas
 
+interface Tarea {
+    val responsable: Empleado
+    val empleados: List<Empleado>
+    fun nominaDeEmpleados() = (empleados + responsable).toSet()
+    fun horasNecesariasParaFinalizar(): Int
+    fun costo(): Int
+}
 
-class TareaSimple(val horasEstimadas: Int, val responsable: Empleado, val empleados: List<Empleado>,
-                  val costoDeInfraestructura: Int) {
+class TareaSimple(val horasEstimadas: Int, override val responsable: Empleado, override val empleados: List<Empleado>,
+                  val costoDeInfraestructura: Int): Tarea {
 
-    fun nominaDeEmpleados() = this.empleados + this.responsable
+    override fun horasNecesariasParaFinalizar() = horasEstimadas / empleados.size
 
-    fun horasNecesariasParaFinalizar() = horasEstimadas / empleados.size
-
-    fun costo() = horasNecesariasParaFinalizar() * sueldoPorHoraDeCadaEmpleado() +
+    override fun costo() = horasNecesariasParaFinalizar() * sueldoPorHoraDeCadaEmpleado() +
             horasEstimadas * responsable.dineroPorHoraTrabajada + costoDeInfraestructura
 
     fun sueldoPorHoraDeCadaEmpleado() = empleados.sumBy { it.dineroPorHoraTrabajada }
 }
 
-class TareaDeIntegracion(val responsable: Empleado, val tareas: List<TareaSimple>) {
-    fun horasNecesariasParaFinalizar(): Int {
+class TareaDeIntegracion(override val responsable: Empleado, val tareas: List<TareaSimple>): Tarea {
+    override val empleados = tareas.flatMap { it.nominaDeEmpleados() }
+    override fun horasNecesariasParaFinalizar(): Int {
         val sumaSubtareas = tareas.sumBy { it.horasNecesariasParaFinalizar() }
         return sumaSubtareas + (sumaSubtareas / 8)
     }
 
-    fun costo() = tareas.sumBy { it.costo() } * 1.03
-
-    fun nominaDeEmpleados() = (tareas.flatMap { it.nominaDeEmpleados() } + this.responsable).toSet()
+    override fun costo() = (tareas.sumBy { it.costo() } * 1.03).toInt()
 }

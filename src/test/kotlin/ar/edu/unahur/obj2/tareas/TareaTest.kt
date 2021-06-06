@@ -35,8 +35,8 @@ class TareaTest : DescribeSpec({
         it("costo tarea 2 ($148)") {
           tarea02.costo().shouldBe(148)
         }
-        it("costo de integracion ($348,14)") {
-          integracion01.costo().shouldBe(348.14)
+        it("costo de integracion ($348)") {
+          integracion01.costo().shouldBe(348)
         }
       }
 
