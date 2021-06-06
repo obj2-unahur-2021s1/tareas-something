@@ -11,8 +11,8 @@ class TareaTest : DescribeSpec({
     val empleado04 = Empleado(6)
     val grupo01 = listOf(empleado02, empleado03)
     val grupo02 = listOf(empleado01, empleado02)
-    val tarea01 = Tarea(10, empleado01, grupo01 , 100 )
-    val tarea02 = Tarea(8, empleado03, grupo02, 80)
+    val tarea01 = TareaSimple(10, empleado01, grupo01 , 100 )
+    val tarea02 = TareaSimple(8, empleado03, grupo02, 80)
     val integracion01 = TareaDeIntegracion(empleado04, listOf(tarea01, tarea02))
 
     describe("una tarea de integracion con dos subtareas") {
@@ -37,6 +37,19 @@ class TareaTest : DescribeSpec({
         }
         it("costo de integracion ($348,14)") {
           integracion01.costo().shouldBe(348.14)
+        }
+      }
+
+      describe("Nomina de empleados") {
+        it("nomina tarea 1 [emp01, emp03, emp02]") {
+          tarea01.nominaDeEmpleados().shouldBe(listOf(empleado02, empleado03, empleado01))
+        }
+        it("nomina tarea 2 [emp01, emp02, emp03]") {
+          tarea02.nominaDeEmpleados().shouldBe(listOf(empleado01, empleado02, empleado03))
+        }
+        it("nomina de integracion [e01,e02,e03,e04]") {
+          integracion01.nominaDeEmpleados().shouldBe(
+            setOf(empleado01,empleado02,empleado03,empleado04))
         }
       }
     }
