@@ -21,6 +21,7 @@ class TareaSimple(val horasEstimadas: Int, override val responsable: Empleado, o
 
 class TareaDeIntegracion(override val responsable: Empleado, val tareas: List<TareaSimple>): Tarea {
     override val empleados = tareas.flatMap { it.nominaDeEmpleados() }
+
     override fun horasNecesariasParaFinalizar(): Int {
         val sumaSubtareas = tareas.sumBy { it.horasNecesariasParaFinalizar() }
         return sumaSubtareas + (sumaSubtareas / 8)
@@ -28,3 +29,5 @@ class TareaDeIntegracion(override val responsable: Empleado, val tareas: List<Ta
 
     override fun costo() = (tareas.sumBy { it.costo() } * 1.03).toInt()
 }
+
+class Empleado(val dineroPorHoraTrabajada: Int)
